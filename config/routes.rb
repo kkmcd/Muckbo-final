@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
     
+  devise_for :installs
   get '/search' => 'rooms#search'
   
   post '/report' => 'rooms#report_create'
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
   
   mount RailsAdmin::Engine => '/bomuck', as: 'rails_admin'
   
-  root 'rooms#index'
+  root :to => 'rooms#index'
   resources :rooms do 
     member do
      delete '/exit' => 'rooms#user_exit_room'

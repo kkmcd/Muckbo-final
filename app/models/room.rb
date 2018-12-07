@@ -48,9 +48,12 @@ class Room < ApplicationRecord
  end
  
  def user_ready(user)
-   Admission.where(user_id: user.id, room_id: self.id).update(ready_state: true)
+    Admission.where(user_id: user.id, room_id: self.id).update(ready_state: false)
  end
-    
+ 
+  def user_ready_false(user)
+    Admission.where(user_id: user.id, room_id: self.id).update(ready_state: true)
+ end   
 
 # 해시 태그 
 

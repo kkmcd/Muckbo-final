@@ -54,7 +54,6 @@
       this.messageToSend = this.$textarea.val()
       this.render();
       location.reload();
-
     },
     
     addMessageEnter: function(event) {

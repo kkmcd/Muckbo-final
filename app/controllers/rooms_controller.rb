@@ -8,7 +8,15 @@ class RoomsController < ApplicationController
   # GET /rooms.json
   def index
     @rooms = Room.where(room_state: false).all
+    @rooms_all = Room.all
     @rooms.where(admissions_count: 0).destroy_all
+    if user_signed_in?#12.7 오늘 수정한 내용 (경로 자동 설정)
+      @rooms_all.each do |room|
+        if current_user.joined_room?(room)
+          redirect_to "/rooms/#{room.id}"
+        end
+      end
+    end #요기까지
   end
 
   # GET /rooms/1
@@ -31,7 +39,6 @@ class RoomsController < ApplicationController
         end      
       end
     end
-
   end
 
   # GET /rooms/new
@@ -98,6 +105,14 @@ class RoomsController < ApplicationController
   end
 
   def sign_in
+        # 유저가 입력한 ID, PW를 바탕으로
+    # 실제로 로그인이 이루어지는 곳
+    if user_signed_in?
+      redirect_to '/ddddd'
+    else
+      # 가입한 user_id가 없거나, 패스워드가 틀린경우
+      redirect_to '/users/sign_in'
+    end
   end
   
   def log_in
@@ -126,11 +141,13 @@ class RoomsController < ApplicationController
     end
   end
   
+  ###### 11.30 수정. room 모델에서 만든 함수를 적용
   def is_user_ready
    if current_user.is_ready?(@room) # 현재 레디상태라면
+     @room.user_ready(current_user) # 현재유저의 레디상태 바꿔주기
      render js: "console.log('이미 레디상태'); location.reload();"
    else  # 현재 레디상태가 아니라면
-     @room.user_ready(current_user) # 현재유저의 레디상태 바꿔주기
+     @room.user_ready_false(current_user) # 현재유저의 레디상태 바꿔주기
      render js: "console.log('레디상태로 바뀌었습니다.'); location.reload();"
      # 현재 레디한 방 외에 모든방의 레디해제
      current_user.admissions.where.not(room_id: @room.id).destroy_all

@@ -61,6 +61,7 @@
      if(e.which == 13) { 
         $(this).blur();
         $('#submit').focus().click();
+        
      }
   });
   
@@ -86,19 +87,15 @@
   var channel = pusher.subscribe("room_<%=@room.id%>");
   var current_user = <%= current_user.id %>
   //var nickname = <1%= current_user.nickname %>
- 
   channel.bind('chat', function(data){
-
     if (current_user == data.user_id){
       user_chat(data);
       console.log("채팅중입니다.")
     }
-    else{
+    if (current_user != data.user_id){
       another_user_chat(data);
       console.log("채팅중입니다.")
-
     }
   });
   
-
 </script>
